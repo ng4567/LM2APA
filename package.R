@@ -1,8 +1,8 @@
 library(ggplot2)
-library(devtools)
+library(apaTables)
+library(officer)
 
-
-make_lm_plots<-function(model, reg_table, reg_table_name){
+make_lm_plots<-function(model, output_path, reg_table, reg_table_name){
   word_doc <- read_docx()
   p1<-ggplot(model, aes(.fitted, .resid))+geom_point()
   p1<-p1+stat_smooth(method="loess")+geom_hline(yintercept=0, col="red", linetype="dashed")
@@ -81,7 +81,7 @@ make_lm_plots<-function(model, reg_table, reg_table_name){
                            width = 4,
                            height = 3)
   
-  print(word_doc, target = "my_doc.docx")
+  print(word_doc, target = output_path)
   unlink("Cook's dist vs Leverage.png")
   unlink("Cook's distance.png")
   unlink("FittedvResid.png")
@@ -98,13 +98,16 @@ make_lm_plots<-function(model, reg_table, reg_table_name){
   }
 }
 
+#Example code
+mod <- lm(mpg ~ wt, data = mtcars)
+
+make_lm_plots(mod, "test.docx", 1, "table.doc")
+
 #ggplot code from:
 #https://rpubs.com/therimalaya/43190
 
-#helpful YT video:
+#helpful YT video with officeR tutorial:
 #https://www.youtube.com/watch?v=HCc3z9BGpJQ
-
-make_lm_plots(mod, 1, "tesst.doc")
 
 
 
